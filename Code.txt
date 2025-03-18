@@ -1,0 +1,62 @@
+# Step 1: Install & Import Required Libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from google.colab import files
+
+# Step 2: Upload the Excel File
+uploaded = files.upload()  # This will prompt you to upload 'employee_performance.xlsx'
+
+# Step 3: Load the Dataset
+df = pd.read_excel("employee_performance.xlsx")
+
+# Step 4: Basic Information & Statistics
+print("🔹 First 5 Rows:")
+print(df.head())
+
+print("\n🔹 Dataset Info:")
+print(df.info())
+
+print("\n🔹 Summary Statistics:")
+print(df.describe())
+
+print("\n🔹 Checking Missing Values:")
+print(df.isnull().sum())
+
+# Step 5: Data Visualizations
+
+# 📊 Distribution of Performance Scores
+plt.figure(figsize=(8, 5))
+sns.histplot(df["Performance_Score"], bins=10, kde=True, color='blue')
+plt.title("Distribution of Employee Performance Scores")
+plt.show()
+
+# 📊 Salary vs. Performance Score
+plt.figure(figsize=(8, 5))
+sns.scatterplot(x=df["Salary"], y=df["Performance_Score"], hue=df["Department"], palette="coolwarm")
+plt.title("Salary vs. Performance Score")
+plt.show()
+
+# 📊 Department-wise Performance
+plt.figure(figsize=(8, 5))
+sns.boxplot(x=df["Department"], y=df["Performance_Score"], palette="Set2")
+plt.title("Performance Score by Department")
+plt.show()
+
+# 📊 Promotion Status Count
+plt.figure(figsize=(6, 4))
+sns.countplot(x=df["Promotion_Status"], palette="coolwarm")
+plt.title("Count of Employees Promoted vs Not Promoted")
+plt.show()
+
+# Step 6: Fix Correlation Heatmap Issue
+
+# Convert categorical columns to numerical if necessary
+if df["Promotion_Status"].dtype == "object":
+    df["Promotion_Status"] = df["Promotion_Status"].astype("category").cat.codes
+
+if df["Performance_Score"].dtype == "object":
+    df["Performance_Score"] = df["Performance_Score"].astype("category").cat.codes
+
+# 📊 Correlation Heatmap (Fixed)
+plt.figure(figsize=(10, 6))
